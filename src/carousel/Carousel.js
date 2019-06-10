@@ -155,10 +155,10 @@ export default class Carousel extends Component {
             console.warn('react-native-snap-carousel: It is recommended to use at least version 0.44 of React Native with the plugin');
         }
         if (!props.vertical && (!props.sliderWidth || !props.itemWidth)) {
-            console.error('react-native-snap-carousel: You need to specify both `sliderWidth` and `itemWidth` for horizontal carousels');
+            console.warn('react-native-snap-carousel: You need to specify both `sliderWidth` and `itemWidth` for horizontal carousels');
         }
         if (props.vertical && (!props.sliderHeight || !props.itemHeight)) {
-            console.error('react-native-snap-carousel: You need to specify both `sliderHeight` and `itemHeight` for vertical carousels');
+            console.warn('react-native-snap-carousel: You need to specify both `sliderHeight` and `itemHeight` for vertical carousels');
         }
         if (props.apparitionDelay && !IS_IOS && !props.useScrollView) {
             console.warn('react-native-snap-carousel: Using `apparitionDelay` on Android is not recommended since it can lead to rendering issues');
@@ -167,7 +167,7 @@ export default class Carousel extends Component {
             console.warn('react-native-snap-carousel: Props `customAnimationType` and `customAnimationOptions` have been renamed to `activeAnimationType` and `activeAnimationOptions`');
         }
         if (props.onScrollViewScroll) {
-            console.error('react-native-snap-carousel: Prop `onScrollViewScroll` has been removed. Use `onScroll` instead');
+            console.warn('react-native-snap-carousel: Prop `onScrollViewScroll` has been removed. Use `onScroll` instead');
         }
     }
 
@@ -203,6 +203,22 @@ export default class Carousel extends Component {
         });
     }
 
+    componentDidUpdate() {
+        const { firstItem, data } = this.props;
+
+        if (!IS_IOS) {
+            if (firstItem === 0) {
+                this._snapToItem(0, false, false, false, false);
+            }
+            if (firstItem === data.length - 2) {
+                this._snapToItem(data.length - 2, false, false, false, false);
+            }
+            if (firstItem === data.length - 1) {
+                this._snapToItem(data.length - 1, false, false, false, false);
+            }
+        }
+    }
+    
     shouldComponentUpdate (nextProps, nextState) {
         if (this.props.shouldOptimizeUpdates === false) {
             return true;
